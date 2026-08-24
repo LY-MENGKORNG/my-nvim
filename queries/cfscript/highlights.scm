@@ -1,0 +1,260 @@
+; Variables
+;----------
+
+(identifier) @variable
+
+; CFML scopes
+;-------------
+
+((identifier) @variable.builtin
+ (#match? @variable.builtin "\\v\\c^(APPLICATION|ARGUMENTS|CGI|CLIENT|COOKIE|FORM|LOCAL|REQUEST|SERVER|SESSION|THIS|URL|VARIABLES)$"))
+
+; Properties
+;-----------
+
+(property_identifier) @property
+(shorthand_property_identifier) @property
+(private_property_identifier) @property
+
+; Component and property declarations
+;-------------------------------------
+
+(component_attribute
+  (attribute_label) @attribute)
+
+(property_declaration
+  name: (identifier) @property)
+
+(spread_element
+  "..." @operator)
+
+; Function and method definitions
+;--------------------------------
+
+(function_expression
+  name: (identifier) @function)
+(function_declaration
+  name: (identifier) @function)
+(function_declaration
+  (access_type) @keyword)
+(method_definition
+  name: (property_identifier) @function.method)
+
+(pair
+  key: (property_identifier) @function.method
+  value: [(function_expression) (arrow_function)])
+
+(assignment_expression
+  left: (member_expression
+    property: (property_identifier) @function.method)
+  right: [(function_expression) (arrow_function)])
+
+(variable_declarator
+  name: (identifier) @function
+  value: [(function_expression) (arrow_function)])
+
+(assignment_expression
+  left: (identifier) @function
+  right: [(function_expression) (arrow_function)])
+
+; Function and method calls
+;--------------------------
+
+; Lucee built-in functions (from lucee-docs 03.reference.01.functions) - highlight as builtin
+(call_expression
+  function: (identifier) @function.builtin
+  (#match? @function.builtin "\\v\\c^(abs|acos|addsoaprequestheader|addsoapresponseheader|aigetmetadata|aihas|ajaxlink|ajaxonload|applicationpathcacheclear|applicationstarttime|applicationstop|argon2checkhash|array|arrayappend|arrayavg|arrayclear|arraycontains|arraycontainsnocase|arraydelete|arraydeleteat|arraydeletenocase|arrayeach|arrayevery|arrayfilter|arrayfind|arrayfindall|arrayfindallnocase|arrayfindnocase|arrayfirst|arrayindexexists|arrayinsertat|arrayisdefined|arrayisempty|arraylast|arraylen|arraymap|arraymax|arraymedian|arraymerge|arraymid|arraymin|arraynew|arraypop|arrayprepend|arraypush|arrayreduce|arrayremoveduplicates|arrayresize|arrayreverse|arrayset|arrayshift|arrayslice|arraysome|arraysort|arraysplice|arraysum|arrayswap|arraytolist|arraytostruct|arrayunshift|asc|asin|astfrompath|astfromstring|atn|beat|binarydecode|binaryencode|bitand|bitmaskclear|bitmaskread|bitmaskset|bitnot|bitor|bitshln|bitshrn|bitxor|booleanformat|bundleinfo|cacheclear|cachecount|cachedelete|cacheget|cachegetall|cachegetallids|cachegetdefaultcachename|cachegetmetadata|cachegetproperties|cacheidexists|cachekeyexists|cacheput|cacheregionexists|cacheregionnew|cacheregionremove|cacheremove|cacheremoveall|cachesetproperties|callstackdump|callstackget|canonicalize|ceiling|cfusion_decrypt|cfusion_encrypt|charsetdecode|charsetencode|chr|cjustify|cleartimezone|collectioneach|collectionevery|collectionfilter|collectionmap|collectionreduce|collectionsome|compare|comparenocase|componentcacheclear|componentcachelist|componentinfo|componentlistpackage|compress|configimport|configtranslate|contractpath|cos|createaisession|createdate|createdatetime|createdynamicproxy|createguid|createobject|createodbcdate|createodbcdatetime|createodbctime|createtime|createtimespan|createulid|createuniqueid|createuuid|createwebsocketclient|csrfgeneratetoken|csrfverifytoken|ctcacheclear|ctcachelist|datasourceflushmetacache|dateadd|datecompare|dateconvert|datediff|dateformat|datepart|datetimeformat|day|dayofweek|dayofweekasstring|dayofweekshortasstring|dayofyear|daysinmonth|daysinyear|dbpoolclear|de|debugadd|decimalformat|decodeforhtml|decodefromurl|decrementvalue|decrypt|decryptbinary|deleteclientvariable|deserializejson|directorycopy|directorycreate|directorydelete|directoryexists|directoryinfo|directorylist|directoryrename|dollarformat|dump|duplicate|each|ec2describeinstances|echo|empty|encodeforcss|encodefordn|encodeforhtml|encodeforhtmlattribute|encodeforjavascript|encodeforldap|encodeforsql|encodeforurl|encodeforxml|encodeforxmlattribute|encodeforxpath|encrypt|encryptbinary|entitydelete|entityload|entityloadbyexample|entityloadbypk|entitymerge|entitynamearray|entitynamelist|entitynew|entityreload|entitysave|entitytoquery|esapidecode|esapiencode|evaluate|exp|expandpath|extensionexists|extensioninfo|extensionlist|extract|fileappend|fileclose|filecopy|filedelete|fileexists|filegetmimetype|fileinfo|fileiseof|filemodetosymbolic|filemove|fileopen|fileread|filereadbinary|filereadline|fileseek|filesetaccessmode|filesetattribute|filesetlastmodified|fileskipbytes|filetouch|fileupload|fileuploadall|filewrite|filewriteline|find|findlast|findlastnocase|findnocase|findoneof|firstdayofmonth|fix|floor|formatbasen|gatewayaction|gatewaystate|generate3deskey|generateargon2hash|generatepbkdfkey|generatersakeys|generatesecretkey|getapplicationmetadata|getapplicationsettings|getauthuser|getbasetagdata|getbasetaglist|getbasetemplatepath|getbuiltinfunction|getcanonicalpath|getclasspath|getclientvariableslist|getcomponentmetadata|getcomponentstaticscope|getcontextinfo|getcontextroot|getcpuusage|getcurrentcontext|getcurrenttemplatepath|getdirectoryfrompath|getencoding|getfilefrompath|getfileinfo|getfreespace|getfunctioncalledname|getfunctiondata|getfunctionkeywords|getfunctionlist|gethttprequestdata|gethttprequestheaders|gethttptimestring|getk2serverdoccount|getk2serverdoccountlimit|getlocale|getlocaledisplayname|getlocaleinfo|getlocalhostip|getluceeid|getmemoryusage|getmetadata|getmetricdata|getnumericdate|getpagecontext|getprinterinfo|getprinterlist|getprofilesections|getprofilestring|getpropertyfile|getpropertystring|getreadableimageformats|getsoaprequest|getsoaprequestheader|getsoapresponse|getsoapresponseheader|getsystemfreememory|getsystemmetrics|getsystemproporenvvar|getsystemtotalmemory|gettagdata|gettaglist|gettempdirectory|gettempfile|gettemplatepath|gettickcount|gettimezone|gettimezoneinfo|gettoken|gettotalspace|getuserroles|getvariable|getvfsmetadata|getwriteableimageformats|guarddecode|guardencode|hash|hash40|hmac|hour|htmlcodeformat|htmleditformat|htmlparse|iif|imageaddborder|imageblur|imagecaptcha|imageclearrect|imagecoderinfo|imagecopy|imagecrop|imagedrawarc|imagedrawbeveledrect|imagedrawcubiccurve|imagedrawimage|imagedrawline|imagedrawlines|imagedrawoval|imagedrawpoint|imagedrawquadraticcurve|imagedrawrect|imagedrawroundrect|imagedrawtext|imagefilter|imagefiltercolormap|imagefiltercurves|imagefilterkernel|imagefilterwarpgrid|imageflip|imagefonts|imageformats|imagegetblob|imagegetbufferedimage|imagegetexifmetadata|imagegetexiftag|imagegetheight|imagegetiptcmetadata|imagegetwidth|imagegrayscale|imageinfo|imagenegative|imagenew|imageoverlay|imagepaste|imageread|imagereadbase64|imageresize|imagerotate|imagerotatedrawingaxis|imagescaletofit|imagesetantialiasing|imagesetbackgroundcolor|imagesetdrawingalpha|imagesetdrawingcolor|imagesetdrawingstroke|imagesetdrawingtransparency|imagesharpen|imageshear|imagesheardrawingaxis|imagetranslate|imagetranslatedrawingaxis|imagewrite|imagewritebase64|imagewritetobrowser|imagexordrawingmode|incrementvalue|inputbasen|inquiryaisession|insert|inspecttemplates|int|internalrequest|interruptthread|invoke|isarray|isbinary|isboolean|isclosure|iscustomfunction|isdate|isdebugmode|isdefined|isempty|isfileobject|isflushed|isimage|isimagefile|isinstanceof|isinthread|isipinrange|isipv6|isjson|isleapyear|islocalhost|isnotmap|isnull|isnumeric|isnumericdate|isobject|ispdfobject|isquery|issimplevalue|issoaprequest|isstruct|isthreadinterrupted|isuserinanyrole|isuserinrole|isuserloggedin|isvalid|isvideofile|iswddx|iswithintransaction|isxml|isxmlattribute|isxmldoc|isxmlelem|isxmlnode|isxmlroot|iszipfile|javacast|jsstringformat|lcase|left|len|listappend|listavg|listchangedelims|listcompact|listcontains|listcontainsnocase|listdeleteat|listeach|listevery|listfilter|listfind|listfindnocase|listfirst|listgetat|listgetduplicates|listindexexists|listinsertat|listitemtrim|listlast|listlen|listmap|listprepend|listqualifiedtoarray|listqualify|listreduce|listremoveduplicates|listrest|listsetat|listsome|listsort|listtoarray|listtrim|listvaluecount|listvaluecountnocase|ljustify|loadaisession|location|log|log10|logallthreads|lscurrencyformat|lsdateformat|lsdatetimeformat|lsdayofweek|lseurocurrencyformat|lsiscurrency|lsisdate|lsisnumeric|lslcase|lsnumberformat|lsparsecurrency|lsparsedatetime|lsparseeurocurrency|lsparsenumber|lstimeformat|lsucase|lsweek|ltrim|luceeaigetmetadata|luceeaihas|luceecreateaisession|luceeinquiryaisession|manifestread|markdowntohtml|maveninfo|mavenload|max|metaphone|mid|millisecond|min|minute|month|monthasstring|monthshortasstring|newline|now|nowserver|nullvalue|numberformat|objectequals|objectload|objectsave|ormclearsession|ormcloseallsessions|ormclosesession|ormevictcollection|ormevictentity|ormevictqueries|ormexecutequery|ormflush|ormgetsession|ormgetsessionfactory|ormreload|pagepoolclear|pagepoollist|paragraphformat|parameterexists|parsedatetime|parsenumber|pi|precisionevaluate|preservesinglequotes|quarter|query|queryaddcolumn|queryaddrow|queryappend|queryclear|queryclose|querycolumnarray|querycolumncount|querycolumndata|querycolumnexists|querycolumnlist|queryconvertforgrid|querycurrentrow|querydeletecolumn|querydeleterow|queryeach|queryevery|queryexecute|queryfilter|querygetcell|querygetcellbyindex|querygetrow|queryinsertat|queryisempty|querykeyexists|querylazy|querymap|querynew|queryprepend|queryrecordcount|queryreduce|queryrenamecolumn|queryreverse|queryrowbyindex|queryrowdata|queryrowdatabyindex|queryrowswap|querysetcell|querysetrow|queryslice|querysome|querysort|querytostruct|quotedvaluelist|rand|randomize|randrange|rediscommand|rediscommandlowpriority|redisconnectionpoolinfo|reescape|refind|refindnocase|releasecomobject|rematch|rematchnocase|removechars|render|repeatstring|replace|replacelist|replacelistnocase|replacenocase|rereplace|rereplacenocase|restdeleteapplication|restinitapplication|restsetresponse|reverse|right|rjustify|round|rtrim|runasync|s3addacl|s3clearbucket|s3copy|s3createbucket|s3delete|s3deletebucket|s3download|s3exists|s3generatepresignedurl|s3generateuri|s3getacl|s3getmetadata|s3getversioninfo|s3listbucket|s3listbuckets|s3move|s3read|s3readbinary|s3setacl|s3setmetadata|s3upload|s3write|sanitize|sanitizehtml|second|secretproviderget|sendgatewaymessage|serialize|serializeaisession|serializejson|sessioncommit|sessionexists|sessioninvalidate|sessionrotate|sessionstarttime|setencoding|setlocale|setprofilestring|setpropertystring|settimezone|setvariable|sgn|sin|sizeof|sleep|soundex|spanexcluding|spanincluding|spreadsheetnew|sqr|sslcertificateinstall|sslcertificatelist|storeaddacl|storegetacl|storegetmetadata|storesetacl|storesetmetadata|stringeach|stringevery|stringfilter|stringlen|stringmap|stringreduce|stringsome|stringsort|stripcr|structappend|structclear|structcopy|structcount|structdelete|structeach|structevery|structfilter|structfind|structfindkey|structfindvalue|structget|structinsert|structisempty|structkeyarray|structkeyexists|structkeylist|structkeytranslate|structmap|structnew|structreduce|structsome|structsort|structtosorted|structupdate|structvaluearray|systemcacheclear|systemoutput|tan|threaddata|threadinterrupt|threadinterrupted|threadjoin|threadterminate|throw|timeformat|tobase64|tobinary|tonumeric|toscript|tostring|trace|transactioncommit|transactionrollback|transactionsetsavepoint|trim|trimwhitespace|truefalseformat|ucase|ucfirst|unserializejava|urldecode|urlencode|urlencodedformat|urlsessionformat|val|validatejson|valuearray|valuelist|valueref|verifyclient|webservicenew|websocketinfo|week|wrap|writedump|writelog|writeoutput|xmlchildpos|xmlelemnew|xmlformat|xmlgetnodetype|xmlnew|xmlparse|xmlsearch|xmltransform|xmlvalidate|year|yesnoformat)$"))
+
+(call_expression
+  function: (identifier) @function)
+
+(call_expression
+  function: (member_expression
+    property: (property_identifier) @function.method))
+
+; Special identifiers
+;--------------------
+
+((identifier) @constructor
+ (#match? @constructor "^[A-Z]"))
+
+([
+    (identifier)
+    (shorthand_property_identifier)
+    (shorthand_property_identifier_pattern)
+ ] @constant
+ (#match? @constant "^[A-Z_][A-Z\\d_]+$"))
+
+
+
+; Literals
+;---------
+
+(this) @variable.builtin
+(super) @variable.builtin
+(undefined) @constant.builtin
+
+[
+  (true)
+  (false)
+  (null)
+  (undefined)
+] @constant.builtin
+
+(comment) @comment
+
+[
+  (string)
+  (template_string)
+] @string
+
+(hash_expression
+  "#" @punctuation.special)
+(hash_empty) @punctuation.special
+
+(regex) @string.special
+(number) @number
+
+; Tokens
+;-------
+
+[
+  ";"
+  (optional_chain)
+  (static_chain)
+  "."
+  ","
+] @punctuation.delimiter
+
+(ordered_struct
+  ["[" ":" "]"] @punctuation.bracket)
+
+(cfml_template
+  "```" @punctuation.delimiter)
+
+(ternary_expression
+  [
+    "?"
+    ":"
+  ] @keyword.conditional.ternary)
+
+(elvis_expression
+  "?:" @keyword.conditional.ternary)
+
+; Types
+;------
+
+(parameter_type) @type
+(catch_clause
+  type: (catch_type) @type)
+
+; Tag statements
+;---------------
+
+(tag_statement
+  tag: (identifier) @keyword)
+(query_tag
+  "query" @keyword)
+
+; Imports
+;--------
+
+(import_path
+  (identifier) @module)
+
+
+[
+  "-"
+  "--"
+  "-="
+  "+"
+  "++"
+  "+="
+  "*"
+  "*="
+  "**"
+  "**="
+  "/"
+  "/="
+  "%"
+  "%="
+  "<"
+  "<="
+  "<<="
+  "="
+  "=="
+  "==="
+  "!="
+  "!=="
+  "=>"
+  ">"
+  ">="
+  ">>="
+  ">>>="
+  "^"
+  "&"
+  "|"
+  "^="
+  "&="
+  "|="
+  "&&"
+  (logical_or)
+  "||"
+  "??"
+  "&&="
+  "||="
+  "??="
+] @operator
+
+[
+  "("
+  ")"
+  "["
+  "]"
+  "{"
+  "}"
+]  @punctuation.bracket
+
+(template_substitution
+  "${" @punctuation.special
+  "}" @punctuation.special) @embedded
+
+[
+  "as"
+  "break"
+  "case"
+  "catch"
+  "component"
+  "const"
+  "continue"
+  "debugger"
+  "default"
+  "do"
+  "else"
+  "export"
+  "finally"
+  "for"
+  "from"
+  "function"
+  "get"
+  "if"
+  "import"
+  "in"
+  "include"
+  "instanceof"
+  "let"
+  "new"
+  "of"
+  "query"
+  "return"
+  "set"
+  "static"
+  "switch"
+  "target"
+  "throw"
+  "try"
+  "var"
+  "void"
+  "while"
+  "with"
+] @keyword
